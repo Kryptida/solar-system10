@@ -15,3 +15,8 @@ jobs:
               run: |
                 chmod +x script.sh
                 ./script.sh
+
+            - uses: actions/upload-artifact@v7
+              with:
+                name: dragon.txt
+                path: dragon.txt
