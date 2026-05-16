@@ -16,6 +16,7 @@ jobs:
   unit-testing:
     name: unit testing
     strategy:
+      fail-fast: false
       matrix:
         nodejs_version: [18, 19, 20]
         os: [ubuntu-latest, macos-latest]
@@ -29,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup NodeJS version - ${{ matrix.nodejs_version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.nodejs_version }}
 
@@ -41,8 +42,8 @@ jobs:
         run: npm test
 
       - name: archive test result
-        if: steps.solartest.outcome == 'failure' || steps.solartest.outcome == 'success'
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-            name: Mocha-Test-Result
-            path: test-results.xml
+          name: Mocha-Test-Result-${{ matrix.os }}-${{ matrix.nodejs_version }}
+          path: test-results.xml
