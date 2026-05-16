@@ -37,4 +37,12 @@ jobs:
         run: npm install
 
       - name: unit testing
+        id: solartest
         run: npm test
+
+      - name: archive test result
+        if: steps.solartest.outcome == 'failure' || steps.solartest.outcome == 'success'
+        uses: actions/upload-artifacts@v3
+        with:
+            name: Mocha-Test-Result
+            path: test-results.xml
