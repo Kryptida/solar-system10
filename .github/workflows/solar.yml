@@ -45,5 +45,32 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Mocha-Test-Result
+          name: Mocha-Test-Result-${{ matrix.os }}-${{ matrix.nodejs_version }}
           path: test-results.xml
+
+  code-coverage:
+    name: code coverage
+    needs: [unit-testing]
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup NodeJS version 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: install dep
+        run: npm install
+
+      - name: check code coverage
+        continue-on-error: true
+        run: npm run coverage
+
+      - name: archive code coverage result
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-result
+          path: coverage
+          retention-days: 5
